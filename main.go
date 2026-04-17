@@ -5,13 +5,14 @@ import "fmt"
 func MaskLinks(input string) string {
     data := []byte(input)
     result := make([]byte, 0, len(data))
-    prefix := []byte("http://")
-    n := len(prefix)
 
     for i := 0; i < len(data); {
-        if i+n <= len(data) && bytesEqual(data[i:i+n], prefix) {
+        if i+7 <= len(data) &&
+            data[i] == 'h' && data[i+1] == 't' && data[i+2] == 't' &&
+            data[i+3] == 'p' && data[i+4] == ':' &&
+            data[i+5] == '/' && data[i+6] == '/' {
+
             start := i
-            i += n
             for i < len(data) && data[i] != ' ' {
                 i++
             }
@@ -23,42 +24,12 @@ func MaskLinks(input string) string {
             i++
         }
     }
+
     return string(result)
 }
 
-func bytesEqual(a, b []byte) bool {
-    if len(a) != len(b) {
-        return false
-    }
-    for i := range a {
-        if a[i] != b[i] {
-            return false
-        }
-    }
-    return true
-}
-
 func main() {
-    input := "Visit http://example.com and also http://foo.bar/baz now!"
-    data := []byte(input)
-    result := make([]byte, 0, len(data))
-    prefix := []byte("http://")
-    n := len(prefix)
-
-    for i := 0; i < len(data); {
-        if i+n <= len(data) && bytesEqual(data[i:i+n], prefix) {
-            start := i
-            i += n
-            for i < len(data) && data[i] != ' ' {
-                i++
-            }
-            for j := start; j < i; j++ {
-                result = append(result, '*')
-            }
-        } else {
-            result = append(result, data[i])
-            i++
-        }
-    }
-    fmt.Printf("%s\n", result)
+    input := "Visit http://example.com and http://test.com"
+    masked := MaskLinks(input)
+    fmt.Println(masked)
 }
