@@ -4,32 +4,38 @@ import "fmt"
 
 func MaskLinks(input string) string {
     data := []byte(input)
-    result := make([]byte, 0, len(data))
+    out := make([]byte, 0, len(data))
+    
+    p := []byte("http://")
+    pl := len(p)
 
     for i := 0; i < len(data); {
-        if i+7 <= len(data) &&
-            data[i] == 'h' && data[i+1] == 't' && data[i+2] == 't' &&
-            data[i+3] == 'p' && data[i+4] == ':' &&
-            data[i+5] == '/' && data[i+6] == '/' {
-
-            start := i
-            for i < len(data) && data[i] != ' ' {
-                i++
+        if i+pl <= len(data) {
+            match := true
+            for k := 0; k < pl; k++ {
+                if data[i+k] != p[k] {
+                    match = false
+                    break
+                }
             }
-            for j := start; j < i; j++ {
-                result = append(result, '*')
+            if match {
+                out = append(out, p...)
+                i += pl
+                for i < len(data) && data[i] != ' ' {
+                    out = append(out, '*')
+                    i++
+                }
+                continue
             }
-        } else {
-            result = append(result, data[i])
-            i++
         }
+        out = append(out, data[i])
+        i++
     }
-
-    return string(result)
+    return string(out)
 }
 
 func main() {
-    input := "Visit http://example.com and http://test.com"
-    masked := MaskLinks(input)
-    fmt.Println(masked)
+    input := "Hello, its my page: http://localhost123.com See you"
+    result := MaskLinks(input)
+    fmt.Println(result)
 }
