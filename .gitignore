@@ -1,0 +1,11 @@
+/bin/
+/dist/
+masklinks
+masklinks.exe
+
+*.test
+*.out
+coverage.html
+
+.idea/
+.vscode/
