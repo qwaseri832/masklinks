@@ -78,6 +78,16 @@ func TestMask(t *testing.T) {
 			in:   "https://a.ru",
 			want: "https://****",
 		},
+		{
+			name: "İ перед схемой не сдвигает границу адреса",
+			in:   "İ http://example.com",
+			want: "İ http://***********",
+		},
+		{
+			name: "знак Кельвина перед схемой не сдвигает границу адреса",
+			in:   "Khttp://a.ru",
+			want: "Khttp://****",
+		},
 	}
 
 	for _, tt := range tests {
@@ -118,6 +128,7 @@ func TestMaskPreservesRuneCount(t *testing.T) {
 		"http://пример.рф и ещё http://a.b",
 		"без ссылок вообще",
 		"https://x\thttp://y\nhttps://z",
+		"İK http://пример.рф",
 	}
 	for _, in := range inputs {
 		got := masklinks.Mask(in)
