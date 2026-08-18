@@ -55,7 +55,11 @@ masked := masklinks.Mask("см. http://example.com/a?b=1 дальше")
 
 masked = masklinks.MaskSchemes("ftp://files.local", "ftp://")
 // "ftp://***********"
+
+masked = masklinks.MaskSchemes(text, append(masklinks.DefaultSchemes(), "ftp://")...)
 ```
+
+`DefaultSchemes` возвращает копию, поэтому дополнять её `append` безопасно.
 
 ## Правила маскирования
 
